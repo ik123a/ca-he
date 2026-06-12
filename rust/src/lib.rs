@@ -1,6 +1,9 @@
 use std::ops::BitXor;
 use rand::Rng;
 
+pub mod ffi;
+
+
 /// Bit-parallel 1D binary CA grid.
 /// Packs N cells into ceil(N/64) u64 words.
 #[derive(Clone, Debug, PartialEq, Eq)]

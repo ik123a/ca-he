@@ -81,9 +81,10 @@ powershell -File run_miner.ps1
 - [x] High-performance Rust Core engine (1D/2D BitGrid with Rayon concurrency)
 - [x] Gas-optimized Solidity contract for on-chain 2D CA verification
 - [x] Proof-of-Evolution Blockchain Miner node & pipeline
-- [ ] libcahe C-API & Python ctypes bindings (Phase 5)
-- [ ] Performance benchmarks vs TFHE-rs (Phase 5)
-- [ ] Cryptographic security analysis & NIST tests (Phase 5)
+- [x] libcahe C-API & Python ctypes bindings (Phase 5)
+- [x] Performance benchmarks vs TFHE-rs (Phase 5)
+- [x] Cryptographic security analysis & NIST tests (Phase 5)
+
 
 ## License
 

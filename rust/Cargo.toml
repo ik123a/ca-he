@@ -3,6 +3,11 @@ name = "ca_he_core"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "ca_he_core"
+crate-type = ["cdylib", "rlib"]
+
+
 [dependencies]
 rand = "0.8.5"
 serde_json = "1.0"
