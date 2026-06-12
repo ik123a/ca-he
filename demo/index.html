@@ -512,7 +512,7 @@
     
     <!-- LaTeX Math Rendering script -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script src="app.js"></script>
     <script>
@@ -528,6 +528,11 @@
             }
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
+            
+            // Trigger MathJax rendering if loaded
+            if (window.MathJax) {
+                window.MathJax.typeset();
+            }
         }
     </script>
 </body>
