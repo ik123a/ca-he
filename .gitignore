@@ -9,7 +9,8 @@ ENV/
 env/
 
 # Rust
-/target/
+target/
+
 **/*.rs.bk
 Cargo.lock
 
