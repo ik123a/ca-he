@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDEs & System
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Project Temporary Files
+scratch/
+rustup-init.exe
+exhaustive_search_pypy.py
+results/*_pypy_*.json
