@@ -342,6 +342,72 @@ fn random_genome(height: usize, width: usize, steps_range: (usize, usize)) -> Ge
     }
 }
 
+fn decode_hex(s: &str) -> Result<Vec<u8>, std::num::ParseIntError> {
+    let mut s_clean = s;
+    if s_clean.starts_with("0x") || s_clean.starts_with("0X") {
+        s_clean = &s_clean[2..];
+    }
+    (0..s_clean.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&s_clean[i..i + 2], 16))
+        .collect()
+}
+
+fn generate_deterministic_test_pairs_2d(
+    height: usize,
+    width: usize,
+    seed_bytes: [u8; 32],
+    count: usize,
+) -> Vec<(BitGrid2D, BitGrid2D)> {
+    use sha3::{Digest, Keccak256};
+
+    let mut pairs = Vec::with_capacity(count);
+    let mut temp = seed_bytes;
+
+    for i in 0..count {
+        // 1. Generate testA[i]
+        let mut hasher = Keccak256::new();
+        hasher.update(&temp);
+        let mut i_bytes = [0u8; 32];
+        let i_u64 = i as u64;
+        i_bytes[24..32].copy_from_slice(&i_u64.to_be_bytes());
+        hasher.update(&i_bytes);
+        let hash_a = hasher.finalize();
+        temp.copy_from_slice(&hash_a);
+
+        let val_a = u64::from_be_bytes(temp[24..32].try_into().unwrap());
+
+        // 2. Generate testB[i]
+        let mut hasher = Keccak256::new();
+        hasher.update(&temp);
+        let mut i_plus_100_bytes = [0u8; 32];
+        let i_plus_100_u64 = (i + 100) as u64;
+        i_plus_100_bytes[24..32].copy_from_slice(&i_plus_100_u64.to_be_bytes());
+        hasher.update(&i_plus_100_bytes);
+        let hash_b = hasher.finalize();
+        temp.copy_from_slice(&hash_b);
+
+        let val_b = u64::from_be_bytes(temp[24..32].try_into().unwrap());
+
+        let mut a = BitGrid2D::new(height, width);
+        let mut b = BitGrid2D::new(height, width);
+        for y in 0..8 {
+            for x in 0..8 {
+                let bit_idx = (y << 3) | x;
+                let bit_val_a = ((val_a >> bit_idx) & 1) != 0;
+                a.set_cell(y, x, bit_val_a);
+
+                let bit_val_b = ((val_b >> bit_idx) & 1) != 0;
+                b.set_cell(y, x, bit_val_b);
+            }
+        }
+
+        pairs.push((a, b));
+    }
+
+    pairs
+}
+
 fn generate_test_pairs_2d(height: usize, width: usize, num_pairs: usize) -> Vec<(BitGrid2D, BitGrid2D)> {
     let mut rng = rand::thread_rng();
     let mut pairs = Vec::with_capacity(num_pairs);
@@ -364,12 +430,11 @@ fn run_search_2d(
     width: usize,
     population_size: usize,
     generations: usize,
-    num_test_pairs: usize,
     crossover_rate: f64,
     mutation_rate: f64,
+    test_pairs: Vec<(BitGrid2D, BitGrid2D)>,
 ) -> Vec<Genome> {
-    let test_pairs = generate_test_pairs_2d(height, width, num_test_pairs);
-
+    let num_test_pairs = test_pairs.len();
     let mut population = Vec::with_capacity(population_size);
     for _ in 0..population_size {
         population.push(random_genome(height, width, (8, 64)));
@@ -387,20 +452,16 @@ fn run_search_2d(
     let mut stagnation_counter = 0;
 
     for gen in 0..generations {
-        // Parallelized fitness evaluation using Rayon!
         population.par_iter_mut().for_each(|ind| {
             ind.fitness = evaluate_fitness(ind.enc_lut, ind.eval_lut, ind.steps, height, width, &test_pairs);
         });
 
-        // Pareto rank
         let fronts = non_dominated_sort(&mut population);
 
-        // Crowding distance
         for front in &fronts {
             calculate_crowding_distance(&mut population, front);
         }
 
-        // Track best
         let current_best = population.iter().max_by(|a, b| a.fitness.aggregate.partial_cmp(&b.fitness.aggregate).unwrap()).unwrap();
         if current_best.fitness.aggregate > best_fitness {
             best_fitness = current_best.fitness.aggregate;
@@ -409,7 +470,6 @@ fn run_search_2d(
             stagnation_counter += 1;
         }
 
-        // Print progress
         if gen % 20 == 0 || gen == generations - 1 {
             let front0_size = if fronts.is_empty() { 0 } else { fronts[0].len() };
             let avg_xor = population.iter().map(|g| g.fitness.homo_xor).sum::<f64>() / population.len() as f64;
@@ -423,7 +483,6 @@ fn run_search_2d(
             );
         }
 
-        // Early convergence check
         let mut converged = false;
         for g in &population {
             if g.fitness.homo_xor >= 0.99 && !is_linear_rule_2d(g.enc_lut) {
@@ -438,7 +497,6 @@ fn run_search_2d(
             break;
         }
 
-        // Stagnation handling
         if stagnation_counter > 100 {
             println!("  [!] Stagnation detected at gen {}, injecting diversity", gen);
             let n_inject = population_size / 4;
@@ -449,7 +507,6 @@ fn run_search_2d(
             stagnation_counter = 0;
         }
 
-        // Create offspring
         let mut offspring = Vec::with_capacity(population_size);
         let mut rng = rand::thread_rng();
         while offspring.len() < population_size {
@@ -464,22 +521,18 @@ fn run_search_2d(
             offspring.push(child);
         }
 
-        // Evaluate offspring in parallel!
         offspring.par_iter_mut().for_each(|ind| {
             ind.fitness = evaluate_fitness(ind.enc_lut, ind.eval_lut, ind.steps, height, width, &test_pairs);
         });
 
-        // Combine population and offspring
         let mut combined = population;
         combined.extend(offspring);
 
-        // Sort combined
         let fronts = non_dominated_sort(&mut combined);
         for front in &fronts {
             calculate_crowding_distance(&mut combined, front);
         }
 
-        // Keep best population_size
         combined.sort_by(|a, b| {
             a.rank.cmp(&b.rank).then_with(|| {
                 b.crowding.partial_cmp(&a.crowding).unwrap()
@@ -498,16 +551,38 @@ fn main() {
     let width = 8;
     let population_size = 100;
     let generations = 200;
-    let num_test_pairs = 30;
+    let num_test_pairs = 3; // Match NUM_VERIFICATION_TRIALS in the smart contract
+
+    let args: Vec<String> = std::env::args().collect();
+    let test_pairs = if args.len() > 1 {
+        let seed_str = &args[1];
+        println!("Using challenge seed: {}", seed_str);
+        if let Ok(decoded) = decode_hex(seed_str) {
+            if decoded.len() == 32 {
+                let mut seed_bytes = [0u8; 32];
+                seed_bytes.copy_from_slice(&decoded);
+                generate_deterministic_test_pairs_2d(height, width, seed_bytes, num_test_pairs)
+            } else {
+                println!("Error: Hex seed must be exactly 32 bytes (64 characters). Using random test pairs.");
+                generate_test_pairs_2d(height, width, num_test_pairs)
+            }
+        } else {
+            println!("Error: Failed to decode hex seed. Using random test pairs.");
+            generate_test_pairs_2d(height, width, num_test_pairs)
+        }
+    } else {
+        println!("No seed provided, generating random test pairs.");
+        generate_test_pairs_2d(height, width, num_test_pairs)
+    };
 
     let final_pop = run_search_2d(
         height,
         width,
         population_size,
         generations,
-        num_test_pairs,
         0.7,
         0.15,
+        test_pairs,
     );
 
     let mut front0: Vec<Genome> = final_pop.into_iter().filter(|g| g.rank == 0).collect();
@@ -540,11 +615,11 @@ fn main() {
                 "eval_lut": g.eval_lut,
                 "steps": g.steps,
                 "fitness": {
-                    "homo_xor": g.fitness.homo_xor,
-                    "avalanche": g.fitness.avalanche,
-                    "nonlinearity": g.fitness.nonlinearity,
-                    "cost": g.fitness.cost,
-                    "aggregate": g.fitness.aggregate,
+                     "homo_xor": g.fitness.homo_xor,
+                     "avalanche": g.fitness.avalanche,
+                     "nonlinearity": g.fitness.nonlinearity,
+                     "cost": g.fitness.cost,
+                     "aggregate": g.fitness.aggregate,
                 },
                 "is_linear": is_linear_rule_2d(g.enc_lut),
             })

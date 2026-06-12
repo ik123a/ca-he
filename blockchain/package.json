@@ -1,0 +1,14 @@
+{
+  "name": "ca-he-blockchain",
+  "version": "1.0.0",
+  "description": "Smart contracts and tests for CA-HE Proof-of-Evolution",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.2"
+  }
+}
