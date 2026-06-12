@@ -16,11 +16,11 @@ To verify that the ciphertexts produced by the non-linear CA evolution do not ex
 ## 2. Brute-Force Key Recovery Resistance (KPA Simulation)
 We simulated a Known-Plaintext Attack where the adversary intercepts a plaintext-ciphertext pair and attempts to brute-force the secret encryption parameters (`enc_rule`, `steps`).
 
-- **Average latency to verify a single candidate key:** 0.004163 ms
+- **Average latency to verify a single candidate key:** 0.007166 ms
 - **1D CA Search Space Complexity:** 32,768 combinations
-- **Estimated time to brute-force 1D keyspace:** 0.136 seconds
+- **Estimated time to brute-force 1D keyspace:** 0.235 seconds
 - **2D CA Search Space Complexity (Von Neumann):** 549,755,813,888 combinations
-- **Estimated time to brute-force 2D keyspace:** 635.7 hours (0.07 years)
+- **Estimated time to brute-force 2D keyspace:** 1094.4 hours (0.12 years)
 
 *Note: For the 2D Von Neumann neighborhood, the search space size ($2^{32} \times 128$) makes brute force computationally intractable on a single CPU. For production 2D Moore neighborhood ($2^{512}$), brute-force is completely impossible.*
 

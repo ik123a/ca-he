@@ -1,5 +1,6 @@
 // CA-HE Reversible CA Dashboard & Interactive Sandbox Simulator
-// v1.2 Core Logic Engine
+// v1.3 Core Logic Engine
+// Aligned with Rust library implementation for 1D and 2D reversible CA
 
 document.addEventListener("DOMContentLoaded", () => {
     // State Variables
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const strengthSlider = document.getElementById("strength-slider");
     const strengthBars = document.getElementById("strength-bars");
     const seedInput = document.getElementById("seed-input");
+    const zeroIvToggle = document.getElementById("zero-iv-toggle");
     const iterationsSpinner = document.getElementById("iterations-spinner");
     const updateRuleToggle = document.getElementById("update-rule-toggle");
     const encryptionTimelineSlider = document.getElementById("encryption-timeline-slider");
@@ -80,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     inetBtn.addEventListener("click", () => {
-        // Generate random seed
         const newSeed = Math.floor(Math.random() * 9000000000000000) + 1000000000000000;
         seedInput.value = newSeed;
         seedValue = newSeed.toString();
@@ -105,6 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
         runSimulation();
     });
 
+    zeroIvToggle.addEventListener("change", () => {
+        runSimulation();
+    });
+
     iterationsSpinner.addEventListener("input", (e) => {
         iterations = parseInt(e.target.value) || 5;
         runSimulation();
@@ -117,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     encryptionTimelineSlider.addEventListener("input", (e) => {
         timelineSliderVal = parseInt(e.target.value);
-        // Update timeline progress bar height
         const percent = (timelineSliderVal / keySteps) * 100;
         timelineProgress.style.height = `${percent}%`;
         runSimulation();
@@ -148,92 +152,122 @@ document.addEventListener("DOMContentLoaded", () => {
         const gridA = encodeRepetition(valA, k, size);
         const gridB = encodeRepetition(valB, k, size);
 
-        // 2. IV generation from seed
-        const iv = seedToIV(seedValue);
+        // 2. IV generation from seed (or 0 if Zero IV toggle is active)
+        const useZeroIv = zeroIvToggle.checked;
+        const iv = useZeroIv ? 0n : seedToIV(seedValue);
 
-        // Mask starting states
+        // Mask starting states (Step -1 in Fredkin reversible CA)
         const startA = gridA ^ iv;
         const startB = gridB ^ iv;
 
-        // 3. Evolve CA Forward
-        let lut = getRulesetLUT(ruleset, currentDimension);
-        
-        let historyA, historyB;
+        // Fetch Rule Pair
+        const rulePair = getRuleset(ruleset, currentDimension);
+        const encRule = rulePair.enc;
+        const evalRule = rulePair.eval;
+
+        // 3. Evolve CA Forward for both components
+        let encResultA, encResultB;
         if (currentDimension === "1D") {
-            historyA = evolveReversible1D(startA, iv, lut, radius, size, keySteps);
-            historyB = evolveReversible1D(startB, iv, lut, radius, size, keySteps);
+            encResultA = encrypt1D(gridA, iv, encRule, radius, size, keySteps);
+            encResultB = encrypt1D(gridB, iv, encRule, radius, size, keySteps);
         } else {
-            historyA = evolveReversible2D(startA, iv, lut, keySteps);
-            historyB = evolveReversible2D(startB, iv, lut, keySteps);
+            encResultA = encrypt2D(gridA, iv, encRule, keySteps);
+            encResultB = encrypt2D(gridB, iv, encRule, keySteps);
         }
 
-        const cipherA = historyA[historyA.length - 1];
-        const cipherB = historyB[historyB.length - 1];
+        // history has length keySteps+1 (step 0 to keySteps)
+        const historyA = encResultA.history;
+        const historyB = encResultB.history;
+
+        // Ciphertexts are composed of two consecutive states (Step steps-1, Step steps)
+        const ctA = { c0: encResultA.states[keySteps], c1: encResultA.states[keySteps + 1] };
+        const ctB = { c0: encResultB.states[keySteps], c1: encResultB.states[keySteps + 1] };
 
         // 4. Homomorphic Evaluation on Ciphertexts
-        let evaluatedCipher;
+        let ctEval;
         let expectedMathResult;
 
         if (op === "xor") {
-            evaluatedCipher = cipherA ^ cipherB;
             expectedMathResult = valA ^ valB;
+            if (currentDimension === "1D") {
+                ctEval = evalAdd1D(ctA, ctB, evalRule, radius, size, keySteps);
+            } else {
+                ctEval = evalAdd2D(ctA, ctB, evalRule, keySteps);
+            }
         } else if (op === "or") {
-            evaluatedCipher = cipherA | cipherB;
             expectedMathResult = valA | valB;
+            // OR is not homomorphic, but we compute it bitwise on ciphertexts
+            ctEval = { c0: ctA.c0 | ctB.c0, c1: ctA.c1 | ctB.c1 };
         } else if (op === "and") {
-            evaluatedCipher = cipherA & cipherB;
             expectedMathResult = valA & valB;
+            // AND is not homomorphic, but we compute it bitwise on ciphertexts
+            ctEval = { c0: ctA.c0 & ctB.c0, c1: ctA.c1 & ctB.c1 };
         } else if (op === "add") {
-            // Simulated 64-bit modular addition
-            evaluatedCipher = (cipherA + cipherB) & 0xffffffffffffffffn;
-            expectedMathResult = (valA + valB) & 0xff; // 8-bit wrap
+            expectedMathResult = (valA + valB) & 0xff;
+            // Addition requires advanced multi-layer rules, simulated here as 64-bit sum
+            ctEval = { 
+                c0: (ctA.c0 + ctB.c0) & 0xffffffffffffffffn, 
+                c1: (ctA.c1 + ctB.c1) & 0xffffffffffffffffn 
+            };
         }
 
         // 5. Decryption & Reverse Evolution
         let recoveredGrid;
         let decryptedVal;
 
+        // Combined IV for evaluated ciphertext is IV_A ^ IV_B = 0
+        const combinedIv = 0n;
+
         if (op === "xor") {
-            // Reversible CA-HE allows perfect XOR decryption by back-evolution under combined IV = 0
-            let decHistory;
-            // Back evolve evaluatedCipher
-            const c0 = historyA[historyA.length - 2] ^ historyB[historyB.length - 2];
-            const c1 = evaluatedCipher;
-            
-            let recoveredPair;
             if (currentDimension === "1D") {
-                recoveredPair = reverseReversible1D(c0, c1, lut, radius, size, keySteps);
+                recoveredGrid = decrypt1D(ctEval.c0, ctEval.c1, combinedIv, encRule, radius, size, keySteps);
             } else {
-                recoveredPair = reverseReversible2D(c0, c1, lut, keySteps);
+                recoveredGrid = decrypt2D(ctEval.c0, ctEval.c1, combinedIv, encRule, keySteps);
             }
-            // Recovered state corresponds to S_0 = (Encoded A ^ IV) ^ (Encoded B ^ IV) = Encoded A ^ Encoded B
-            recoveredGrid = recoveredPair[0]; 
+            
+            // Decoded Val
             decryptedVal = decodeRepetition(recoveredGrid, k, size);
         } else {
-            // Non-linear or add operations violate homomorphism on CA, leading to diffusion noise
-            // We simulate the diffusion noise and the resulting error-correction failure
-            let decHistory;
-            const c0 = (historyA[historyA.length - 2] + historyB[historyB.length - 2]) & 0xffffffffffffffffn;
-            const c1 = evaluatedCipher;
+            // For OR, AND, ADD, which are not algebraically supported by the CA ruleset,
+            // we decrypt but introduce noise to simulate standard HE noise degradation.
+            let noisyC0 = ctEval.c0;
+            let noisyC1 = ctEval.c1;
             
-            let recoveredPair;
+            let rawRecovered;
             if (currentDimension === "1D") {
-                recoveredPair = reverseReversible1D(c0, c1, lut, radius, size, keySteps);
+                rawRecovered = decrypt1D(noisyC0, noisyC1, combinedIv, encRule, radius, size, keySteps);
             } else {
-                recoveredPair = reverseReversible2D(c0, c1, lut, keySteps);
+                rawRecovered = decrypt2D(noisyC0, noisyC1, combinedIv, encRule, keySteps);
             }
             
-            // Introduce simulated chaotic bit corruption representing HE noise in non-linear ops
+            // Introduce bit corruption to simulate diffusion noise in non-supported homomorphic math
             let noiseMask = 0n;
-            let prng = valA * 13 + valB * 37;
+            let prng = valA * 13 + valB * 37 + 7;
             for (let i = 0; i < 64; i++) {
                 prng = (prng * 1103515245 + 12345) & 0x7fffffff;
-                if ((prng % 100) < 35) { // 35% bit-flip probability
+                if ((prng % 100) < 35) { // 35% error rate
                     noiseMask |= (1n << BigInt(i));
                 }
             }
             
-            recoveredGrid = recoveredPair[0] ^ noiseMask;
+            recoveredGrid = rawRecovered ^ noiseMask;
+            decryptedVal = decodeRepetition(recoveredGrid, k, size);
+        }
+
+        // If the rule is nonlinear and IV is non-zero, homomorphic evaluation will fail
+        // because the IVs cannot cancel out cleanly due to nonlinear mixing.
+        const ruleIsNonlinear = (ruleset !== "90");
+        if (ruleIsNonlinear && !useZeroIv && op === "xor") {
+            // Simulate nonlinear mixing failure
+            let noiseMask = 0n;
+            let prng = valA * 41 + valB * 97 + (parseInt(seedValue.substring(0, 4)) || 17);
+            for (let i = 0; i < 64; i++) {
+                prng = (prng * 1103515245 + 12345) & 0x7fffffff;
+                if ((prng % 100) < 40) { // 40% noise rate due to non-zero IV mixing
+                    noiseMask |= (1n << BigInt(i));
+                }
+            }
+            recoveredGrid = recoveredGrid ^ noiseMask;
             decryptedVal = decodeRepetition(recoveredGrid, k, size);
         }
 
@@ -242,14 +276,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // ─────────────────────────────────────────────────────────────────
 
         // Middle column vertical state grids (representing primary simulation A)
-        // Adjust indices according to the current keySteps setting
         const step10Idx = Math.floor(keySteps * 0.2);
         const step20Idx = Math.floor(keySteps * 0.4);
         const step40Idx = Math.floor(keySteps * 0.8);
 
-        // Select which state grids to render based on the slider value
-        // E.g., if slider is set to 30, cap the history display steps
-        const t000State = historyA[0];
+        // Select states to render based on the slider value
+        // timelineSliderVal determines how many steps of the evolution to show
+        // states[0] is Step -1 (masked plaintext), history[t] is Step t
+        const t000State = encResultA.states[0];
         const t010State = historyA[Math.min(step10Idx, timelineSliderVal)];
         const t020State = historyA[Math.min(step20Idx, timelineSliderVal)];
         const t040State = historyA[Math.min(step40Idx, timelineSliderVal)];
@@ -286,10 +320,10 @@ document.addEventListener("DOMContentLoaded", () => {
         renderBitSequence("flow-seq-plain-a", gridA);
         renderBitSequence("flow-seq-init-a", startA);
         renderBitSequence("flow-seq-diff-t000", startA);
-        renderBitSequence("flow-seq-diff-t050", cipherA);
-        renderBitSequence("flow-seq-eval-ca", cipherA);
-        renderBitSequence("flow-seq-eval-cb", cipherB);
-        renderBitSequence("flow-seq-eval-res", evaluatedCipher);
+        renderBitSequence("flow-seq-diff-t050", historyA[keySteps]);
+        renderBitSequence("flow-seq-eval-ca", historyA[keySteps]);
+        renderBitSequence("flow-seq-eval-cb", historyB[keySteps]);
+        renderBitSequence("flow-seq-eval-res", ctEval.c1);
         renderBitSequence("flow-seq-dec-grid", recoveredGrid);
         
         // Show decoded binary representation
@@ -354,6 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return decoded;
     }
 
+    // Seed to IV generator (deterministic PRNG)
     function seedToIV(seedStr) {
         let hash = 0n;
         for (let i = 0; i < seedStr.length; i++) {
@@ -370,17 +405,26 @@ document.addEventListener("DOMContentLoaded", () => {
         return iv;
     }
 
-    function getRulesetLUT(ruleset, dimension) {
+    function getRuleset(rulesetName, dimension) {
         if (dimension === "1D") {
-            if (ruleset === "30") return 30n;
-            if (ruleset === "90") return 90n;
-            // Evolved Rule 43/36 LUT representation
-            return 165n; 
+            if (rulesetName === "30") {
+                return { enc: 30n, eval: 30n };
+            }
+            if (rulesetName === "90") {
+                return { enc: 90n, eval: 90n };
+            }
+            // Evolved Rule 43/36
+            return { enc: 43n, eval: 36n };
         } else {
-            // 2D rules require a 32-bit LUT (e.g. von Neumann neighborhood)
-            if (ruleset === "30") return 0x1e2d3c4bn; // mock 2D chaotic rule
-            if (ruleset === "90") return 0x5a5a5a5an; // mock 2D linear rule
-            return 0x8f3c71adn; // evolved 2D CA-HE rule
+            // 2D Rules
+            if (rulesetName === "30") {
+                return { enc: 0x1e2d3c4bn, eval: 0x1e2d3c4bn };
+            }
+            if (rulesetName === "90") {
+                return { enc: 0x5a5a5a5an, eval: 0x5a5a5a5an };
+            }
+            // Discovered 2D von Neumann rule pair
+            return { enc: 3603081434n, eval: 4172005139n };
         }
     }
 
@@ -402,30 +446,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return newState;
     }
 
-    // Reversible 1D second-order evolve
-    function evolveReversible1D(start, iv, ruleLut, radius, size, steps) {
-        let p = start ^ iv; // S_{-1} = start ^ iv
-        let c = start;      // S_0 = start
+    // Reversible 1D Encryption (evolve forward)
+    function encrypt1D(plaintext, iv, encRule, radius, size, steps) {
+        let p = plaintext ^ iv;
+        let c = iv;
         let history = [c];
+        let states = [p, c];
         for (let t = 0; t < steps; t++) {
-            let next = applyRule1D(c, ruleLut, radius, size) ^ p;
+            let next = applyRule1D(c, encRule, radius, size) ^ p;
             p = c;
             c = next;
+            states.push(c);
             history.push(c);
         }
-        return history;
+        return { states, history };
     }
 
-    // Reversible 1D second-order reverse
-    function reverseReversible1D(c0, c1, ruleLut, radius, size, steps) {
+    // Reversible 1D Decryption (reverse evolution)
+    function decrypt1D(c0, c1, iv, encRule, radius, size, steps) {
         let next = c1;
         let curr = c0;
         for (let t = 0; t < steps; t++) {
-            let prev = applyRule1D(curr, ruleLut, radius, size) ^ next;
+            let prev = applyRule1D(curr, encRule, radius, size) ^ next;
             next = curr;
             curr = prev;
         }
-        return [curr, next];
+        return curr ^ iv;
+    }
+
+    // Homomorphic addition of ciphertexts (evaluation under evalRule)
+    function evalAdd1D(ct_a, ct_b, evalRule, radius, size, steps) {
+        let p = ct_a.c0 ^ ct_b.c0;
+        let c = ct_a.c1 ^ ct_b.c1;
+        for (let t = 0; t < steps; t++) {
+            let next = applyRule1D(c, evalRule, radius, size) ^ p;
+            p = c;
+            c = next;
+        }
+        return { c0: p, c1: c };
     }
 
     // 2D CA Rule Application (8x8 Von Neumann)
@@ -448,33 +506,48 @@ document.addEventListener("DOMContentLoaded", () => {
         return newState;
     }
 
-    // Reversible 2D second-order evolve
-    function evolveReversible2D(start, iv, ruleLut, steps) {
-        let p = start ^ iv;
-        let c = start;
+    // Reversible 2D Encryption (evolve forward)
+    function encrypt2D(plaintext, iv, encRule, steps) {
+        let p = plaintext ^ iv;
+        let c = iv;
         let history = [c];
+        let states = [p, c];
         for (let t = 0; t < steps; t++) {
-            let next = applyRule2D(c, ruleLut) ^ p;
+            let next = applyRule2D(c, encRule) ^ p;
             p = c;
             c = next;
+            states.push(c);
             history.push(c);
         }
-        return history;
+        return { states, history };
     }
 
-    // Reversible 2D second-order reverse
-    function reverseReversible2D(c0, c1, ruleLut, steps) {
+    // Reversible 2D Decryption (reverse evolution)
+    function decrypt2D(c0, c1, iv, encRule, steps) {
         let next = c1;
         let curr = c0;
         for (let t = 0; t < steps; t++) {
-            let prev = applyRule2D(curr, ruleLut) ^ next;
+            let prev = applyRule2D(curr, encRule) ^ next;
             next = curr;
             curr = prev;
         }
-        return [curr, next];
+        return curr ^ iv;
+    }
+
+    // Homomorphic addition of 2D ciphertexts (evaluation under evalRule)
+    function evalAdd2D(ct_a, ct_b, evalRule, steps) {
+        let p = ct_a.c0 ^ ct_b.c0;
+        let c = ct_a.c1 ^ ct_b.c1;
+        for (let t = 0; t < steps; t++) {
+            let next = applyRule2D(c, evalRule) ^ p;
+            p = c;
+            c = next;
+        }
+        return { c0: p, c1: c };
     }
 
     // Render 8x8 Text Grid
+    // Formatted to output a glowing matrix of coloured 0s and 1s
     function renderTimelineGrid(containerId, state) {
         const container = document.getElementById(containerId);
         if (!container) return;

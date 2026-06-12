@@ -40,8 +40,7 @@
                     <div class="control-group">
                         <label>Ruleset</label>
                         <select id="ruleset-select">
-                            <option value="43-36" selected>Ruleset</option>
-                            <option value="43-36-detail">Evolved Rule 43/36 (Nonlinear)</option>
+                            <option value="43-36" selected>Evolved Rule 43/36 (Nonlinear)</option>
                             <option value="30">Wolfram Rule 30 (Chaotic)</option>
                             <option value="90">Wolfram Rule 90 (Linear)</option>
                         </select>
@@ -84,6 +83,13 @@
                     <div class="control-group">
                         <label>Seed</label>
                         <input type="text" id="seed-input" value="11390111231919993">
+                    </div>
+                    <div class="control-group toggle-group" style="margin-top: 0.5rem;">
+                        <label>Zero IV (Homomorphic Mode)</label>
+                        <label class="switch">
+                            <input type="checkbox" id="zero-iv-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </div>
 

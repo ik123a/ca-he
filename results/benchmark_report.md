@@ -11,12 +11,12 @@ This report presents performance benchmarks for **CA-HE** (compiled with `-O3` i
 
 | Operation | CA-HE 1D (size=64) | CA-HE 2D (8x8) | TFHE-rs (Baseline) | Speedup Ratio (vs 1D) |
 |---|---|---|---|---|
-| **Key Generation** | 0.001312 ms | 0.001281 ms | ~100 ms (approx) | - |
-| **Encryption** | 0.002169 ms | 0.047647 ms | ~5 ms (approx) | - |
-| **Decryption** | 0.002156 ms | 0.037548 ms | ~5 ms (approx) | - |
-| **Single 8-bit Addition** | 0.002092 ms | 0.032141 ms | 10.00 ms | **4780.1x faster** |
-| **Single 16-bit Addition** | 0.002092 ms | 0.032141 ms | 80.00 ms | **38240.6x faster** |
-| **Chain of 10 Additions** | 0.023338 ms | 0.355486 ms | ~100.0 ms | **4284.8x faster** |
+| **Key Generation** | 0.002152 ms | 0.001678 ms | ~100 ms (approx) | - |
+| **Encryption** | 0.003665 ms | 0.154035 ms | ~5 ms (approx) | - |
+| **Decryption** | 0.002999 ms | 0.109735 ms | ~5 ms (approx) | - |
+| **Single 8-bit Addition** | 0.003059 ms | 0.114520 ms | 10.00 ms | **3268.8x faster** |
+| **Single 16-bit Addition** | 0.003059 ms | 0.114520 ms | 80.00 ms | **26150.3x faster** |
+| **Chain of 10 Additions** | 0.028079 ms | 1.175044 ms | ~100.0 ms | **3561.3x faster** |
 
 ## 2. Structural Cryptographic Metrics
 
@@ -30,7 +30,7 @@ This report presents performance benchmarks for **CA-HE** (compiled with `-O3` i
 
 ## 3. Analysis and Key Findings
 1. **Massive Latency Advantages:**
-   Homomorphic additions in CA-HE execute in **microseconds** (approx. `0.002 ms` for 1D) because CA simulation relies on bitwise operations (AND, OR, XOR, shifts) operating directly on standard CPU registers. In contrast, TFHE-rs relies on expensive polynomial ring arithmetic and Fourier transforms (FFT) to perform Torus LWE additions.
+   Homomorphic additions in CA-HE execute in **microseconds** (approx. `0.003 ms` for 1D) because CA simulation relies on bitwise operations (AND, OR, XOR, shifts) operating directly on standard CPU registers. In contrast, TFHE-rs relies on expensive polynomial ring arithmetic and Fourier transforms (FFT) to perform Torus LWE additions.
 2. **Minimal Storage Footprint:**
    Because CA-HE does not require large bootstrapping keys or public evaluation keys, the key size is negligible (14 bytes vs. 20 megabytes).
 3. **Leveled FHE vs. Fully FHE:**
