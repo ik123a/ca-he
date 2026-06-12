@@ -89,6 +89,8 @@ powershell -File run_miner.ps1
 - [x] Dual licensing (MIT + Apache 2.0) and Open-Source release (Phase 6)
 - [x] 3D Cellular Automata Engine core in Rust (Phase 7)
 - [x] 3D C-API and Python ctypes bindings integration (Phase 7)
+- [x] High-Fidelity Web Visualizer & Step-by-Step Educational Sandbox Calculator (Phase 8)
+
 
 
 
