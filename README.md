@@ -17,7 +17,7 @@ An advanced, high-performance cryptographic system that combines homomorphic enc
 ## 📸 Web Dashboard Preview
 Below is the high-fidelity web visualizer dashboard showing the CA configuration controls, the vertical timeline of state diffusion, comparative performance metrics, and the interactive cryptographic pipeline explainer.
 
-![CA-HE Dashboard UI Mockup](assets/media__1781264713802.png)
+![CA-HE Dashboard UI](assets/real_screenshot.png)
 
 ---
 
