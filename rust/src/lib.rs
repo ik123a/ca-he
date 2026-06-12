@@ -643,6 +643,35 @@ mod tests {
         let decrypted = decrypt_2d(&c_sum0, &c_sum1, &iv, &rule, steps);
         assert_eq!(decrypted, a_xor_b, "2D XOR homomorphism failed for linear rule");
     }
+
+    #[test]
+    fn test_roundtrip_3d() {
+        let mut rng = rand::thread_rng();
+        let depth = 4;
+        let height = 4;
+        let width = 4;
+        let steps = 8;
+
+        let rule = CARule3D {
+            lut: [rng.gen::<u64>(), rng.gen::<u64>()],
+        };
+
+        let mut plaintext = BitGrid3D::new(depth, height, width);
+        let mut iv = BitGrid3D::new(depth, height, width);
+        for z in 0..depth {
+            for y in 0..height {
+                for x in 0..width {
+                    plaintext.set_cell(z, y, x, rng.gen::<bool>());
+                    iv.set_cell(z, y, x, rng.gen::<bool>());
+                }
+            }
+        }
+
+        let (c0, c1) = encrypt_3d(&plaintext, &iv, &rule, steps);
+        let decrypted = decrypt_3d(&c0, &c1, &iv, &rule, steps);
+
+        assert_eq!(decrypted, plaintext, "3D Roundtrip failed");
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -863,6 +892,164 @@ pub fn encrypt_2d(plaintext: &BitGrid2D, iv: &BitGrid2D, rule: &CARule2D, steps:
 /// Decrypt a 2D ciphertext grid pair.
 pub fn decrypt_2d(c0: &BitGrid2D, c1: &BitGrid2D, iv: &BitGrid2D, rule: &CARule2D, steps: usize) -> BitGrid2D {
     let ca = ReversibleCA2D::new(rule.clone(), steps);
+    let (orig_prev, _orig_curr) = ca.reverse(c0, c1);
+    &orig_prev ^ iv
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 3D Cellular Automata Implementation
+// ─────────────────────────────────────────────────────────────────────
+
+/// 3D binary grid, represented as a vector of 2D grids (layers).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BitGrid3D {
+    pub layers: Vec<BitGrid2D>,
+    pub depth: usize,
+    pub height: usize,
+    pub width: usize,
+}
+
+impl BitGrid3D {
+    pub fn new(depth: usize, height: usize, width: usize) -> Self {
+        let mut layers = Vec::with_capacity(depth);
+        for _ in 0..depth {
+            layers.push(BitGrid2D::new(height, width));
+        }
+        BitGrid3D {
+            layers,
+            depth,
+            height,
+            width,
+        }
+    }
+
+    pub fn set_cell(&mut self, z: usize, y: usize, x: usize, val: bool) {
+        assert!(z < self.depth);
+        self.layers[z].set_cell(y, x, val);
+    }
+
+    pub fn get_cell(&self, z: usize, y: usize, x: usize) -> bool {
+        assert!(z < self.depth);
+        self.layers[z].get_cell(y, x)
+    }
+}
+
+impl<'a, 'b> BitXor<&'b BitGrid3D> for &'a BitGrid3D {
+    type Output = BitGrid3D;
+
+    fn bitxor(self, rhs: &'b BitGrid3D) -> BitGrid3D {
+        assert_eq!(self.depth, rhs.depth);
+        assert_eq!(self.height, rhs.height);
+        assert_eq!(self.width, rhs.width);
+        let layers = self.layers
+            .iter()
+            .zip(rhs.layers.iter())
+            .map(|(a, b)| a ^ b)
+            .collect();
+        BitGrid3D {
+            layers,
+            depth: self.depth,
+            height: self.height,
+            width: self.width,
+        }
+    }
+}
+
+impl BitXor for BitGrid3D {
+    type Output = BitGrid3D;
+
+    fn bitxor(self, rhs: BitGrid3D) -> BitGrid3D {
+        &self ^ &rhs
+    }
+}
+
+/// A 3D Cellular Automaton rule representation.
+/// For 3D von Neumann neighborhood (7 cells): 128-bit LUT (stored as [u64; 2]).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CARule3D {
+    pub lut: [u64; 2],
+}
+
+pub struct ReversibleCA3D {
+    pub rule: CARule3D,
+    pub steps: usize,
+}
+
+impl ReversibleCA3D {
+    pub fn new(rule: CARule3D, steps: usize) -> Self {
+        ReversibleCA3D { rule, steps }
+    }
+
+    /// Evolve forward by `steps` steps.
+    pub fn evolve(&self, prev: &BitGrid3D, curr: &BitGrid3D) -> (BitGrid3D, BitGrid3D) {
+        let mut p = prev.clone();
+        let mut c = curr.clone();
+        let mut temp = BitGrid3D::new(prev.depth, prev.height, prev.width);
+        for _ in 0..self.steps {
+            self.apply_rule_inplace_step(&p, &c, &mut temp);
+            std::mem::swap(&mut p, &mut c);
+            std::mem::swap(&mut c, &mut temp);
+        }
+        (p, c)
+    }
+
+    /// Reverse-evolve by `steps` steps.
+    pub fn reverse(&self, prev: &BitGrid3D, curr: &BitGrid3D) -> (BitGrid3D, BitGrid3D) {
+        let (p, c) = self.evolve(curr, prev);
+        (c, p)
+    }
+
+    /// Apply rule in-place step: `temp = apply_rule(c) ^ p`
+    fn apply_rule_inplace_step(&self, p: &BitGrid3D, c: &BitGrid3D, temp: &mut BitGrid3D) {
+        let d = c.depth;
+        let h = c.height;
+        let w = c.width;
+
+        for z in 0..d {
+            let z_prev = (z + d - 1) % d;
+            let z_next = (z + 1) % d;
+
+            for y in 0..h {
+                let y_prev = (y + h - 1) % h;
+                let y_next = (y + 1) % h;
+
+                for x in 0..w {
+                    let x_prev = (x + w - 1) % w;
+                    let x_next = (x + 1) % w;
+
+                    // Fetch 7 neighbors
+                    let bit_u = c.layers[z].get_cell(y_prev, x) as u8;
+                    let bit_d = c.layers[z].get_cell(y_next, x) as u8;
+                    let bit_l = c.layers[z].get_cell(y, x_prev) as u8;
+                    let bit_r = c.layers[z].get_cell(y, x_next) as u8;
+                    let bit_f = c.layers[z_prev].get_cell(y, x) as u8;
+                    let bit_b = c.layers[z_next].get_cell(y, x) as u8;
+                    let bit_c = c.layers[z].get_cell(y, x) as u8;
+
+                    let lut_idx = (bit_f << 6) | (bit_b << 5) | (bit_u << 4) | (bit_d << 3) | (bit_l << 2) | (bit_r << 1) | bit_c;
+                    let word_idx = (lut_idx / 64) as usize;
+                    let bit_idx = lut_idx % 64;
+                    let bit_out = ((self.rule.lut[word_idx] >> bit_idx) & 1) != 0;
+
+                    let orig_p = p.layers[z].get_cell(y, x);
+                    temp.set_cell(z, y, x, bit_out ^ orig_p);
+                }
+            }
+        }
+    }
+}
+
+/// Encrypt a 3D plaintext grid.
+pub fn encrypt_3d(plaintext: &BitGrid3D, iv: &BitGrid3D, rule: &CARule3D, steps: usize) -> (BitGrid3D, BitGrid3D) {
+    let initial_prev = plaintext ^ iv;
+    let initial_curr = iv.clone();
+    let ca = ReversibleCA3D::new(rule.clone(), steps);
+    ca.evolve(&initial_prev, &initial_curr)
+}
+
+/// Decrypt a 3D ciphertext grid pair.
+pub fn decrypt_3d(c0: &BitGrid3D, c1: &BitGrid3D, iv: &BitGrid3D, rule: &CARule3D, steps: usize) -> BitGrid3D {
+    let ca = ReversibleCA3D::new(rule.clone(), steps);
     let (orig_prev, _orig_curr) = ca.reverse(c0, c1);
     &orig_prev ^ iv
 }

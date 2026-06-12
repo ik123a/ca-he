@@ -43,6 +43,26 @@ class CaheCiphertext2D(ctypes.Structure):
     def __repr__(self):
         return f"CaheCiphertext2D(c0={self.c0:#x}, c1={self.c1:#x})"
 
+class CaheKey3D(ctypes.Structure):
+    _fields_ = [
+        ("rule_lut0", ctypes.c_uint64),
+        ("rule_lut1", ctypes.c_uint64),
+        ("steps", ctypes.c_uint32),
+        ("iv", ctypes.c_uint64),
+    ]
+
+    def __repr__(self):
+        return f"CaheKey3D(rule_lut0={self.rule_lut0:#x}, rule_lut1={self.rule_lut1:#x}, steps={self.steps}, iv={self.iv:#x})"
+
+class CaheCiphertext3D(ctypes.Structure):
+    _fields_ = [
+        ("c0", ctypes.c_uint64),
+        ("c1", ctypes.c_uint64),
+    ]
+
+    def __repr__(self):
+        return f"CaheCiphertext3D(c0={self.c0:#x}, c1={self.c1:#x})"
+
 
 def load_library():
     lib_names = ["ca_he_core.dll", "libca_he_core.so", "libca_he_core.dylib"]
@@ -162,3 +182,39 @@ def eval_add_2d(key: CaheKey2D, ct_a: CaheCiphertext2D, ct_b: CaheCiphertext2D, 
 
 def bootstrap_2d(key: CaheKey2D, ct: CaheCiphertext2D, height: int, width: int) -> CaheCiphertext2D:
     return _lib.cahe_bootstrap_2d(key, ct, height, width)
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 3D API Bindings
+# ─────────────────────────────────────────────────────────────────────
+
+_lib.cahe_keygen_3d.argtypes = [ctypes.c_uint64, ctypes.c_uint64, ctypes.c_uint32, ctypes.c_uint64]
+_lib.cahe_keygen_3d.restype = CaheKey3D
+
+_lib.cahe_encrypt_3d.argtypes = [CaheKey3D, ctypes.c_uint64, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
+_lib.cahe_encrypt_3d.restype = CaheCiphertext3D
+
+_lib.cahe_decrypt_3d.argtypes = [CaheKey3D, CaheCiphertext3D, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
+_lib.cahe_decrypt_3d.restype = ctypes.c_uint64
+
+_lib.cahe_eval_add_3d.argtypes = [CaheKey3D, CaheCiphertext3D, CaheCiphertext3D, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
+_lib.cahe_eval_add_3d.restype = CaheCiphertext3D
+
+_lib.cahe_bootstrap_3d.argtypes = [CaheKey3D, CaheCiphertext3D, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
+_lib.cahe_bootstrap_3d.restype = CaheCiphertext3D
+
+
+def keygen_3d(rule_lut0: int, rule_lut1: int, steps: int, iv: int) -> CaheKey3D:
+    return _lib.cahe_keygen_3d(rule_lut0, rule_lut1, steps, iv)
+
+def encrypt_3d(key: CaheKey3D, plaintext: int, depth: int, height: int, width: int) -> CaheCiphertext3D:
+    return _lib.cahe_encrypt_3d(key, plaintext, depth, height, width)
+
+def decrypt_3d(key: CaheKey3D, ct: CaheCiphertext3D, depth: int, height: int, width: int) -> int:
+    return _lib.cahe_decrypt_3d(key, ct, depth, height, width)
+
+def eval_add_3d(key: CaheKey3D, ct_a: CaheCiphertext3D, ct_b: CaheCiphertext3D, depth: int, height: int, width: int) -> CaheCiphertext3D:
+    return _lib.cahe_eval_add_3d(key, ct_a, ct_b, depth, height, width)
+
+def bootstrap_3d(key: CaheKey3D, ct: CaheCiphertext3D, depth: int, height: int, width: int) -> CaheCiphertext3D:
+    return _lib.cahe_bootstrap_3d(key, ct, depth, height, width)

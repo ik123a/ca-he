@@ -87,6 +87,9 @@ powershell -File run_miner.ps1
 - [x] Formal Cryptographic Technical Report (Phase 6)
 - [x] Interactive Web-based Encrypted Calculator Visualizer Demo (Phase 6)
 - [x] Dual licensing (MIT + Apache 2.0) and Open-Source release (Phase 6)
+- [x] 3D Cellular Automata Engine core in Rust (Phase 7)
+- [x] 3D C-API and Python ctypes bindings integration (Phase 7)
+
 
 
 

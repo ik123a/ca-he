@@ -129,5 +129,62 @@ class TestCaheBindings(unittest.TestCase):
         recovered_sum = cahe_bindings.decrypt_2d(key, ct_sum, height, width)
         self.assertEqual(recovered_sum, a ^ b)
 
+    def test_3d_roundtrip(self):
+        rule_lut0 = 0x123456789abcdef0
+        rule_lut1 = 0xfedcba9876543210
+        steps = 8
+        depth = 4
+        height = 4
+        width = 4
+        iv = 0x5555555555555555
+        pt = 0xaaaaaaaaaaaaaaaa
+
+        key = cahe_bindings.keygen_3d(rule_lut0, rule_lut1, steps, iv)
+        ct = cahe_bindings.encrypt_3d(key, pt, depth, height, width)
+        
+        self.assertNotEqual(ct.c0, 0)
+        self.assertNotEqual(ct.c1, 0)
+
+        recovered = cahe_bindings.decrypt_3d(key, ct, depth, height, width)
+        self.assertEqual(recovered, pt)
+
+    def test_3d_homomorphism_linear(self):
+        # Generate 3D linear rule: XOR of all 7 neighbors
+        rule_lut0 = 0
+        rule_lut1 = 0
+        for idx in range(128):
+            bit_f = (idx >> 6) & 1
+            bit_b = (idx >> 5) & 1
+            bit_u = (idx >> 4) & 1
+            bit_d = (idx >> 3) & 1
+            bit_l = (idx >> 2) & 1
+            bit_r = (idx >> 1) & 1
+            bit_c = idx & 1
+            
+            bit_out = bit_f ^ bit_b ^ bit_u ^ bit_d ^ bit_l ^ bit_r ^ bit_c
+            if idx < 64:
+                rule_lut0 |= (bit_out << idx)
+            else:
+                rule_lut1 |= (bit_out << (idx - 64))
+
+        steps = 8
+        depth = 4
+        height = 4
+        width = 4
+        iv = 0
+        a = 0x0f0f0f0f0f0f0f0f
+        b = 0xf0f0f0f0f0f0f0f0
+
+        key = cahe_bindings.keygen_3d(rule_lut0, rule_lut1, steps, iv)
+        
+        ct_a = cahe_bindings.encrypt_3d(key, a, depth, height, width)
+        ct_b = cahe_bindings.encrypt_3d(key, b, depth, height, width)
+        
+        ct_sum = cahe_bindings.eval_add_3d(key, ct_a, ct_b, depth, height, width)
+        
+        recovered_sum = cahe_bindings.decrypt_3d(key, ct_sum, depth, height, width)
+        self.assertEqual(recovered_sum, a ^ b)
+
 if __name__ == "__main__":
     unittest.main()
+
