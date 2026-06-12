@@ -1,0 +1,1306 @@
+{
+  "height": 8,
+  "pareto_front": [
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    },
+    {
+      "enc_lut": 3603081434,
+      "eval_lut": 4172005139,
+      "fitness": {
+        "aggregate": 0.556640625,
+        "avalanche": 1.0,
+        "cost": 0.7109375,
+        "homo_xor": 0.0,
+        "nonlinearity": 1.0
+      },
+      "is_linear": false,
+      "steps": 37
+    }
+  ],
+  "width": 8
+}

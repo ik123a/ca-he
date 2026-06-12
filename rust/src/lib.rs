@@ -581,4 +581,285 @@ mod tests {
         let decoded_noisy = decode_repetition(&noisy, k);
         assert_eq!(decoded_noisy, val, "Majority voting failed under noise");
     }
+
+    #[test]
+    fn test_roundtrip_2d() {
+        let mut rng = rand::thread_rng();
+        let height = 8;
+        let width = 8;
+        let steps = 16;
+
+        let rule = CARule2D::VonNeumann(rng.gen::<u32>());
+        
+        let mut plaintext = BitGrid2D::new(height, width);
+        let mut iv = BitGrid2D::new(height, width);
+        for y in 0..height {
+            for x in 0..width {
+                plaintext.set_cell(y, x, rng.gen::<bool>());
+                iv.set_cell(y, x, rng.gen::<bool>());
+            }
+        }
+
+        let (c0, c1) = encrypt_2d(&plaintext, &iv, &rule, steps);
+        let decrypted = decrypt_2d(&c0, &c1, &iv, &rule, steps);
+
+        assert_eq!(decrypted, plaintext, "2D Roundtrip failed");
+    }
+
+    #[test]
+    fn test_linear_homomorphism_2d() {
+        let mut linear_rule_lut = 0u32;
+        for idx in 0..32 {
+            let bit = ((idx >> 4) & 1) ^ ((idx >> 3) & 1) ^ ((idx >> 2) & 1) ^ ((idx >> 1) & 1) ^ (idx & 1);
+            linear_rule_lut |= (bit as u32) << idx;
+        }
+        let rule = CARule2D::VonNeumann(linear_rule_lut);
+        let height = 8;
+        let width = 8;
+        let steps = 16;
+        let iv = BitGrid2D::new(height, width);
+
+        let mut rng = rand::thread_rng();
+        let mut a = BitGrid2D::new(height, width);
+        let mut b = BitGrid2D::new(height, width);
+        for y in 0..height {
+            for x in 0..width {
+                a.set_cell(y, x, rng.gen::<bool>());
+                b.set_cell(y, x, rng.gen::<bool>());
+            }
+        }
+
+        let a_xor_b = &a ^ &b;
+
+        let (c_a0, c_a1) = encrypt_2d(&a, &iv, &rule, steps);
+        let (c_b0, c_b1) = encrypt_2d(&b, &iv, &rule, steps);
+
+        let c_sum0 = &c_a0 ^ &c_b0;
+        let c_sum1 = &c_a1 ^ &c_b1;
+
+        let decrypted = decrypt_2d(&c_sum0, &c_sum1, &iv, &rule, steps);
+        assert_eq!(decrypted, a_xor_b, "2D XOR homomorphism failed for linear rule");
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 2D Cellular Automata Implementation
+// ─────────────────────────────────────────────────────────────────────
+
+/// 2D binary grid, represented as a vector of 1D BitGrid rows.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BitGrid2D {
+    pub rows: Vec<BitGrid>,
+    pub height: usize,
+    pub width: usize,
+}
+
+impl BitGrid2D {
+    pub fn new(height: usize, width: usize) -> Self {
+        let mut rows = Vec::with_capacity(height);
+        for _ in 0..height {
+            rows.push(BitGrid::new(width));
+        }
+        BitGrid2D {
+            rows,
+            height,
+            width,
+        }
+    }
+
+    pub fn set_cell(&mut self, y: usize, x: usize, val: bool) {
+        assert!(y < self.height);
+        self.rows[y].set_bit(x, val);
+    }
+
+    pub fn get_cell(&self, y: usize, x: usize) -> bool {
+        assert!(y < self.height);
+        self.rows[y].get_bit(x)
+    }
+}
+
+impl<'a, 'b> BitXor<&'b BitGrid2D> for &'a BitGrid2D {
+    type Output = BitGrid2D;
+
+    fn bitxor(self, rhs: &'b BitGrid2D) -> BitGrid2D {
+        assert_eq!(self.height, rhs.height);
+        assert_eq!(self.width, rhs.width);
+        let rows = self.rows
+            .iter()
+            .zip(rhs.rows.iter())
+            .map(|(a, b)| a ^ b)
+            .collect();
+        BitGrid2D {
+            rows,
+            height: self.height,
+            width: self.width,
+        }
+    }
+}
+
+impl BitXor for BitGrid2D {
+    type Output = BitGrid2D;
+
+    fn bitxor(self, rhs: BitGrid2D) -> BitGrid2D {
+        &self ^ &rhs
+    }
+}
+
+/// A 2D Cellular Automaton rule representation.
+/// For von Neumann neighborhood: 32-bit LUT (stored as u32).
+/// For Moore neighborhood: 512-bit LUT (stored as [u64; 8]).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CARule2D {
+    VonNeumann(u32),
+    Moore([u64; 8]),
+}
+
+pub struct ReversibleCA2D {
+    pub rule: CARule2D,
+    pub steps: usize,
+}
+
+impl ReversibleCA2D {
+    pub fn new(rule: CARule2D, steps: usize) -> Self {
+        ReversibleCA2D { rule, steps }
+    }
+
+    /// Evolve forward by `steps` steps.
+    pub fn evolve(&self, prev: &BitGrid2D, curr: &BitGrid2D) -> (BitGrid2D, BitGrid2D) {
+        let mut p = prev.clone();
+        let mut c = curr.clone();
+        let mut temp = BitGrid2D::new(prev.height, prev.width);
+        for _ in 0..self.steps {
+            self.apply_rule_inplace_step(&p, &c, &mut temp);
+            std::mem::swap(&mut p, &mut c);
+            std::mem::swap(&mut c, &mut temp);
+        }
+        (p, c)
+    }
+
+    /// Reverse-evolve by `steps` steps.
+    pub fn reverse(&self, prev: &BitGrid2D, curr: &BitGrid2D) -> (BitGrid2D, BitGrid2D) {
+        let (p, c) = self.evolve(curr, prev);
+        (c, p)
+    }
+
+    /// Apply rule in-place step: `temp = apply_rule(c) ^ p`
+    fn apply_rule_inplace_step(&self, p: &BitGrid2D, c: &BitGrid2D, temp: &mut BitGrid2D) {
+        let h = c.height;
+        let w_cells = (c.width + 63) / 64;
+
+        for y in 0..h {
+            let u_idx = if y == 0 { h - 1 } else { y - 1 };
+            let d_idx = if y == h - 1 { 0 } else { y + 1 };
+
+            let row_u = &c.rows[u_idx];
+            let row_d = &c.rows[d_idx];
+            let row_c = &c.rows[y];
+
+            for w in 0..w_cells {
+                let (l_c, c_word, r_c) = get_shifted_words(row_c, w);
+
+                let mut out_word = 0u64;
+
+                match &self.rule {
+                    CARule2D::VonNeumann(rule_lut) => {
+                        let (_, u_word, _) = get_shifted_words(row_u, w);
+                        let (_, d_word, _) = get_shifted_words(row_d, w);
+
+                        for b in 0..64 {
+                            let bit_u = (u_word >> b) & 1;
+                            let bit_d = (d_word >> b) & 1;
+                            let bit_l = (l_c >> b) & 1;
+                            let bit_r = (r_c >> b) & 1;
+                            let bit_c = (c_word >> b) & 1;
+                            let lut_idx = (bit_u << 4) | (bit_d << 3) | (bit_l << 2) | (bit_r << 1) | bit_c;
+                            let bit_out = (rule_lut >> lut_idx) & 1;
+                            out_word |= (bit_out as u64) << b;
+                        }
+                    }
+                    CARule2D::Moore(rule_lut) => {
+                        let (ul_word, u_word, ur_word) = get_shifted_words(row_u, w);
+                        let (dl_word, d_word, dr_word) = get_shifted_words(row_d, w);
+
+                        for b in 0..64 {
+                            let bit_ul = (ul_word >> b) & 1;
+                            let bit_u  = (u_word  >> b) & 1;
+                            let bit_ur = (ur_word >> b) & 1;
+                            let bit_l  = (l_c  >> b) & 1;
+                            let bit_c  = (c_word  >> b) & 1;
+                            let bit_r  = (r_c  >> b) & 1;
+                            let bit_dl = (dl_word >> b) & 1;
+                            let bit_d  = (d_word  >> b) & 1;
+                            let bit_dr = (dr_word >> b) & 1;
+
+                            let lut_idx = (bit_ul << 8) | (bit_u << 7) | (bit_ur << 6) | (bit_l << 5) | (bit_c << 4) | (bit_r << 3) | (bit_dl << 2) | (bit_d << 1) | bit_dr;
+                            let word_idx = lut_idx / 64;
+                            let bit_idx = lut_idx % 64;
+                            let bit_out = (rule_lut[word_idx as usize] >> bit_idx) & 1;
+                            out_word |= (bit_out as u64) << b;
+                        }
+                    }
+                }
+
+                if w == w_cells - 1 {
+                    let last_word_mask = if c.width % 64 == 0 {
+                        u64::MAX
+                    } else {
+                        (1u64 << (c.width % 64)) - 1
+                    };
+                    out_word &= last_word_mask;
+                }
+
+                temp.rows[y].cells[w] = out_word ^ p.rows[y].cells[w];
+            }
+        }
+    }
+}
+
+/// Helper function to shift a single BitGrid row on-the-fly and return (l, c, r) words for index w.
+#[inline(always)]
+fn get_shifted_words(grid_row: &BitGrid, w: usize) -> (u64, u64, u64) {
+    let k_len = grid_row.cells.len();
+    let size = grid_row.size;
+    let prev_w = if w == 0 { k_len - 1 } else { w - 1 };
+    let next_w = if w == k_len - 1 { 0 } else { w + 1 };
+
+    let c_word = grid_row.cells[w];
+
+    let carry_l = if w == 0 {
+        let last_active_bit_idx = (size - 1) % 64;
+        (grid_row.cells[prev_w] >> last_active_bit_idx) & 1
+    } else {
+        grid_row.cells[prev_w] >> 63
+    };
+    let l = (c_word << 1) | carry_l;
+
+    let carry_r = if w == k_len - 1 {
+        grid_row.cells[0] & 1
+    } else {
+        grid_row.cells[next_w] & 1
+    };
+    let r = if w == k_len - 1 {
+        let last_active_bit_idx = (size - 1) % 64;
+        (c_word >> 1) | (carry_r << last_active_bit_idx)
+    } else {
+        (c_word >> 1) | (carry_r << 63)
+    };
+
+    (l, c_word, r)
+}
+
+/// Encrypt a 2D plaintext grid.
+pub fn encrypt_2d(plaintext: &BitGrid2D, iv: &BitGrid2D, rule: &CARule2D, steps: usize) -> (BitGrid2D, BitGrid2D) {
+    let initial_prev = plaintext ^ iv;
+    let initial_curr = iv.clone();
+    let ca = ReversibleCA2D::new(rule.clone(), steps);
+    ca.evolve(&initial_prev, &initial_curr)
+}
+
+/// Decrypt a 2D ciphertext grid pair.
+pub fn decrypt_2d(c0: &BitGrid2D, c1: &BitGrid2D, iv: &BitGrid2D, rule: &CARule2D, steps: usize) -> BitGrid2D {
+    let ca = ReversibleCA2D::new(rule.clone(), steps);
+    let (orig_prev, _orig_curr) = ca.reverse(c0, c1);
+    &orig_prev ^ iv
 }
