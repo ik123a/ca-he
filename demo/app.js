@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTimelineGrid(containerId, state) {
         const container = document.getElementById(containerId);
         if (!container) return;
-        container.innerHTML = "";
+        container.textContent = "";
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
                 let idx = y * 8 + x;
@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderBitSequence(containerId, val) {
         const container = document.getElementById(containerId);
         if (!container) return;
-        container.innerHTML = "";
+        container.textContent = "";
         for (let i = 63; i >= 0; i--) {
             const bit = (val >> BigInt(i)) & 1n;
             const span = document.createElement("span");
