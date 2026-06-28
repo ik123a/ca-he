@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  rust-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Run cargo check
+      run: cargo check --manifest-path rust/Cargo.toml
+    - name: Run cargo test
+      run: cargo test --manifest-path rust/Cargo.toml
+
+  python-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pypdf
+    - name: Run unit tests
+      run: |
+        # Placeholder command since bindings require compiled Rust DLL
+        echo "Ready for python test execution"
