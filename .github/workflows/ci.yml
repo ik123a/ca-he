@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+
 jobs:
   rust-test:
     runs-on: ubuntu-latest
@@ -17,20 +20,11 @@ jobs:
       run: cargo check --manifest-path rust/Cargo.toml
     - name: Run cargo test
       run: cargo test --manifest-path rust/Cargo.toml
-
-  python-test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest pypdf
-    - name: Run unit tests
-      run: |
-        # Placeholder command since bindings require compiled Rust DLL
-        echo "Ready for python test execution"
+    - name: Build native library for Python bindings
+      run: cargo build --manifest-path rust/Cargo.toml
+    - name: Run Python binding tests
+      run: python -m unittest discover -s tests -v
