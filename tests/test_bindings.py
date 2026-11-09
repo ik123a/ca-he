@@ -8,6 +8,18 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 import cahe_bindings
 
 class TestCaheBindings(unittest.TestCase):
+    def test_rule90_evaluation_preserves_the_ciphertext_time_index(self):
+        for steps, a, b in [(16, 105, 42), (11, 3, 240), (37, 128, 127)]:
+            with self.subTest(steps=steps, a=a, b=b):
+                key = cahe_bindings.keygen_1d(90, 90, steps, 0)
+                grid_a = cahe_bindings.encode_repetition_1d(a, 8, 64)
+                grid_b = cahe_bindings.encode_repetition_1d(b, 8, 64)
+                ct_a = cahe_bindings.encrypt_1d(key, grid_a, 64)
+                ct_b = cahe_bindings.encrypt_1d(key, grid_b, 64)
+                combined = cahe_bindings.eval_add_1d(key, ct_a, ct_b, 64)
+                result = cahe_bindings.decrypt_1d(key, combined, 64)
+                self.assertEqual(cahe_bindings.decode_repetition_1d(result, 8, 64), a ^ b)
+
     def test_repetition_coding(self):
         val = 0b10101100
         k = 8

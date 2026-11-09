@@ -118,6 +118,15 @@ pub extern "C" fn cahe_eval_add_1d(
     // Evolve the XOR of the ciphertexts under the eval rule
     let c_sum0 = BitGrid::from_u64(ct_a.c0 ^ ct_b.c0, size as usize);
     let c_sum1 = BitGrid::from_u64(ct_a.c1 ^ ct_b.c1, size as usize);
+
+    // Rule 90 is linear. XOR is already the evaluated ciphertext at the
+    // original time index; another evolution breaks subsequent decryption.
+    if key.enc_rule == 90 && key.eval_rule == 90 {
+        return CaheCiphertext1D {
+            c0: c_sum0.to_u64(),
+            c1: c_sum1.to_u64(),
+        };
+    }
     
     let ca_eval = ReversibleCA::new(key.eval_rule, key.steps as usize);
     let (c_eval0, c_eval1) = ca_eval.evolve(&c_sum0, &c_sum1);

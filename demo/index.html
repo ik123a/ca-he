@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CA-HE Encrypted Calculator | Reversible CA Dashboard</title>
+    <title>CA-HE Research Simulator | Reversible CA Dashboard</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,8 @@
                 <div class="profile-avatar">👤</div>
             </div>
         </header>
+
+        <p class="edu-alert" role="note">Research simulator only. Reversible cellular automata and matching example outputs do not establish cryptographic security, quantum resistance or general fully homomorphic encryption. Comparison charts below are legacy illustrative values, not measured benchmarks. Do not use this demo to protect sensitive data.</p>
 
         <!-- Main Dashboard Content Grid -->
         <div class="dashboard-grid">
@@ -69,7 +71,7 @@
                         <button class="inet-btn" id="inet-btn">INET</button>
                     </div>
                     <div class="control-group">
-                        <label>Strength</label>
+                        <label>Visual level (not security strength)</label>
                         <div class="slider-container">
                             <div class="strength-bar-wrapper" id="strength-bars">
                                 <span class="strength-seg active"></span>
@@ -202,7 +204,7 @@
                 
                 <!-- Performance Comparison -->
                 <div class="metrics-card glass-panel">
-                    <h3>Performance Comparison <span class="sub-h3">(CA-HE vs TFHE-rs)</span></h3>
+                    <h3>Legacy Illustrative Comparison <span class="sub-h3">(not measured benchmarks)</span></h3>
                     
                     <!-- Key Gen -->
                     <div class="chart-group">
@@ -353,7 +355,7 @@
                         <div class="calc-select-row">
                             <label for="calc-op" style="font-size: 0.8rem; color: var(--text-secondary); display:block; margin-bottom:0.25rem;">Operation:</label>
                             <select id="calc-op">
-                                <option value="xor" selected>Bitwise XOR (⊕) — Fully Homomorphic</option>
+                                <option value="xor" selected>Bitwise XOR (⊕) — Operation experiment</option>
                                 <option value="or">Bitwise OR (∨) — Non-linear/Noise-bound</option>
                                 <option value="and">Bitwise AND (∧) — Non-linear/Noise-bound</option>
                                 <option value="add">Modular Addition (+) — Multi-Layer Coupled</option>
@@ -367,7 +369,7 @@
                         <div class="sandbox-status-text">
                             Result: <span id="calc-result-val" style="font-family:var(--font-mono); font-size:1.1rem; color:#00e5ff;">67</span>
                         </div>
-                        <span class="sandbox-status-badge" id="sandbox-badge">VERIFIED</span>
+                        <span class="sandbox-status-badge" id="sandbox-badge">EXAMPLE MATCH</span>
                     </div>
                 </div>
 

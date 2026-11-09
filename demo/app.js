@@ -190,7 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (op === "xor") {
             expectedMathResult = valA ^ valB;
             if (currentDimension === "1D") {
-                ctEval = evalAdd1D(ctA, ctB, evalRule, radius, size, keySteps);
+                // Rule 90 with radius 1 is linear: XOR already evaluates the sum.
+                // Evolving again changes the ciphertext's time index before decryption.
+                ctEval = (encRule === 90n && radius === 1)
+                    ? { c0: ctA.c0 ^ ctB.c0, c1: ctA.c1 ^ ctB.c1 }
+                    : evalAdd1D(ctA, ctB, evalRule, radius, size, keySteps);
             } else {
                 ctEval = evalAdd2D(ctA, ctB, evalRule, keySteps);
             }
@@ -335,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sandboxBadge.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
             sandboxBadge.style.borderColor = "rgba(16, 185, 129, 0.4)";
             sandboxBadge.style.color = "#10b981";
-            sandboxBadge.innerText = "VERIFIED";
+            sandboxBadge.innerText = "EXAMPLE MATCH";
         } else {
             sandboxBadge.className = "sandbox-status-badge";
             sandboxBadge.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
